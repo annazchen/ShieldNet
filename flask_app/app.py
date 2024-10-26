@@ -27,6 +27,9 @@ app = Flask(__name__)
 
 def test():
     return 1
+
+
+# model = pickle.load(open('models/model.pkl', 'rb'))
 @app.route('/')
 def home():
     return render_template('main.html')
