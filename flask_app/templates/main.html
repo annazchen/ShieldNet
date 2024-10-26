@@ -1,0 +1,42 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Braille-Translator</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='styles.css') }}"" type = "text/css">
+    <!-- <script src="scripts/script.js">
+    </script> -->
+</head>
+<body class = "content" id="home">
+    <h1>AI MODEL</h1>
+    <form id="csv_form" action="{{url_for('predict')}}" method="post">
+        <input id="csv_input" type="file" accept=".csv">
+    <input type="submit" value="Submit">
+    </form>
+    <div id = "graph">INSERT GRAPH</div>
+    <div id="Generate">Generate prediction</div>
+    <div class ="results">
+        <p>The network activity is:  {{ prediction_text }}</p>
+    </div>
+    <!-- <script>
+        const form = document.querySelector("#csv_form");
+        const csv_file = document.querySelector("#csv_input");
+        let graph = document.getElementById("graph");
+        
+        form.addEventListener("submit", function (event) {
+            event.preventDefault();
+            graph.innerHTML = "yayy"
+
+            const file = csv_file.files[0]; //just something you need 
+            const reader = new FileReader();
+            reader.onload = function (event) {
+            // Access to content with e.target.result
+                console.log("content: ", event.target.result);
+            };
+            reader.readAsText(file);
+        });
+    </script> -->
+</body>
+</html>
