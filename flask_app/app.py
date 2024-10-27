@@ -1,6 +1,6 @@
 import os
-from flask import Flask, request, render_template, url_for
-from ..w.Graph import analyze_input_file
+from flask import Flask, request, render_template, url_for, redirect
+from Graph import analyze_input_file
 
 app = Flask(__name__, static_url_path='/static')
 
@@ -19,8 +19,8 @@ def predict():
     
     # Store the latest prediction details
     predictions.append({
-        "data": png_path[1],  # Binary predictions or processed data output
-        "img_path": png_path[0]  # Image path
+        # "data": png_path[1],  # Binary predictions or processed data output
+        png_path  # Image path
     })
     
     # Redirect to display the results
@@ -32,10 +32,10 @@ def display():
         last_prediction = predictions[-1]
         return render_template(
             'main.html',
-            prediction_text=last_prediction["data"],
-            img_url=url_for('static', filename=last_prediction["img_path"])
+            prediction_text="../"+last_prediction
+            # img_url="../"+last_prediction
         )
-    return render_template('main.html', prediction_text="No prediction available")
+    # return render_template('main.html', prediction_text="Prediction available", img_url = img_url_temp)
 
 if __name__ == "__main__":
     app.run()
