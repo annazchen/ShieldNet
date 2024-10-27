@@ -144,7 +144,34 @@ plt.show()
 torch.save(model.state_dict(), 'lstm_model.pth')
 print("Model saved to lstm_model.pth")
 
-# Save scalar
-joblib.dump(scaler, 'scaler.pkl')  
-print("Scaler saved to scaler.pkl")
+# Save scalar as pickle file (yum)
+joblib.dump(scaler, 'LSTM_tue.pkl')  
+print("Scaler saved to LSTM_tue.pkl")
+
+def prediction(input_data, model_path = 'lstm_model.pth', scaler_path = 'LSTM_tue.pkl', seq_length = 10):
+    
+    # Intializing model
+    input_size = input_data.shape[1]
+    hidden_size = 50
+    output_size = input_size
+
+    # Define the model structure
+    model = SimpleLSTM(input_size, hidden_size, output_size).to(device)
+    model.load_state_dict(torch.load(model_path))
+
+    # Set the model to evaluation mode
+    model.eval()  
+
+    scaler = joblib.load(scaler_path)
+
+    scaled_data = scaler.transform(input_data)
+    X, _  = scaled_data(scaled_data, seq_length)
+
+    X_tensor = torch.FloatTensor(X).to(device)
+
+
+
+
+
+
 
