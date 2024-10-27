@@ -1,0 +1,23 @@
+<!doctype html>
+<html>
+  <head>
+    <link rel="stylesheet" type="text/css" href="{{ url_for('static', filename='styles/styles.css') }}">
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.7.1/jquery.min.js"></script>
+    <script src="{{ url_for('static', filename='script.js') }}"></script>
+    <title>Home</title>
+    </head>
+    <nav class="navbar">
+        <ul>
+            <li><div class = "links"><a href="{{ url_for('static', filename='main.html') }}">Home</a><div class = "underline"><\div></div></li>
+            <li><div class = "links"><a href="{{ url_for('static', filename='process.html') }}">Process</a><div class = "underline"><\div></div></li>
+            <li><div class = "links"><a href="{{ url_for('static', filename='team.html') }}">Our Team</a><div class = "underline"><\div></div></li>
+        </ul>
+    </nav>
+    <body class = "content" id="home">
+        <div class = "content_process">
+            <div class="graph-description"><div class = "graph-1"></div><div class = "content-1"></div></div>
+            <div class="graph-description"><div class = "graph-2"></div><div class = "content-2"></div></div>
+            <div class="graph-description"><div class = "graph-1"></div><div class = "content-1"></div></div>    
+        </div>
+        </body>
+    </html>

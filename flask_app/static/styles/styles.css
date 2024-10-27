@@ -1,0 +1,256 @@
+@import url('https://fonts.googleapis.com/css2?family=Open+Sans:wght@400&family=Space+Grotesk:wght@400;700&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Lato:ital,wght@0,100;0,400&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Kalnia+Glaze:wght@100..700&display=swap');
+*{
+    margin:0;
+    padding:0;
+    font-family:'Space Grotesk', sans-serif;
+    overflow-x:hidden;
+}
+h1{
+    font-family: 'Lato', sans-serif;
+}
+a{
+    font-size: 16px;
+    cursor: pointer;
+    font-family:'Open Sans', sans-serif;
+}
+
+p{
+    font-size: 20px;
+    font-family:'Open Sans', sans-serif;
+}
+
+/* input[type=file]{
+    font-family: 'Lato', sans-serif;
+    padding: 0 10px;
+    font-size: 16px;
+} */
+
+form{
+    width:40%;
+    display: flex;
+    flex-direction: row;
+    position: relative;
+}
+
+div{
+    font-size: 20px;
+    font-family:'Open Sans', sans-serif;
+}
+
+.banner{
+    position:absolute;
+    top: 0;
+    width: 100%;
+    height: 100vh;
+    background-image: linear-gradient(rgba(0,0,0,0.2), rgba(0,0,0,0.2)), url(../img/bg-img.jpg);
+    background-size: cover;
+    background-position: center;
+}
+
+.navbar{
+    display: flex;
+    width: 100%;
+    justify-content:left;
+    position: absolute;
+    top: 0;
+}
+.navbar ul{
+    margin-left:2%;
+}
+
+.navbar ul li{
+    display: inline-block;
+    position: relative;
+}
+
+.links{
+    display: flex;
+    flex-direction: column;
+    width:100%;
+    height:100%;
+    position: relative;
+}
+.navbar ul li div a{
+    display: block;
+    padding: 16px 20px;
+    font-size: 16px;
+    color: black;
+    text-decoration: none;
+}
+
+.navbar ul li div a:hover{
+    transition: 0.2s;
+    font-weight: 900;
+}
+
+.underline{
+    width:0;
+    height:4px;
+    left:10%;
+    bottom:0;
+    background-color: rgb(157, 183, 255);
+    border-radius: 18px;
+    overflow-y:hidden;
+    position: absolute;
+}
+.links:hover .underline{
+    width:80%;
+    transition: 0.5s;
+}
+.content{
+    margin: 10%;
+    display:flex;
+    flex-direction: column;
+    align-items: center;
+}
+
+.content_home{
+    width: 80%;
+    margin-top: 5%;
+    display: flex;
+    flex-direction: row;
+}
+.content_process{
+    width: 80%;
+    display: flex;
+    flex-direction: column;
+}
+.description{
+    width: 80%;
+    margin-top: 3%;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+}
+.left{
+    width: 20%;
+}
+.middle{
+    width: 20%;
+}
+.right{
+    width: 60%;
+    margin-left: 2%;
+}
+
+.button{
+    display:flex;
+    align-items: center;
+    justify-content: center;
+    border-radius: 12px;
+    box-sizing: border-box;
+    height: 35px;
+    width: 125px;
+}
+
+.title{
+    display:flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+}
+
+#response-box{
+    display:flex;
+    align-items: center;
+    justify-content: center;
+    height: 35px;
+}
+#response-text{
+    display:flex;
+    align-items: center;
+    justify-content: center;
+    border-radius: 12px;
+    box-sizing: border-box;
+    height: 35px;
+    width: 130px;
+    border: 2px;
+    border-style: solid;
+    border-color: rgba(43, 43, 43, 0.253);
+    margin-left:10px;
+}
+#logo{
+    position:relative;
+    margin-bottom: 10px;
+}
+#logo-loading{
+    position:relative;
+    margin-bottom: 10px;
+    display: none;
+}
+#input_button{
+    background-color: white;
+    border-style: solid;
+    border-width: 2px;
+    border-color: black;
+    color: black;
+    position:relative;
+    margin-right: 2%;
+}
+
+#input_button:hover{
+    background-color: lightblue;
+    border-color: lightblue;
+    transition-duration: 0.3s;
+}
+
+#submit_button{
+    position:relative;
+    background-color: rgb(157, 183, 255);
+    color: black;
+    width: 150px;
+}
+
+#submit_button:hover{
+    background-color: lightblue;
+    transition-duration: 0.3s;
+    border: none;
+}
+
+#dash-line{
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    left:25%;
+    position:absolute;
+    height: 35px;
+    z-index:-1;
+}
+.white-bg{
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    background-color: white;
+    position:relative;
+}
+.csv_filler{
+    display: flex;
+    flex-direction: column;
+    position:relative;
+}
+#check_csv_input{
+    font-size: 14px;
+    width: 140px;
+}
+.graph-description{
+    width : 100%;
+    height : 300px;
+    display: flex;
+    flex-direction: row;
+    position: relative;
+    margin-bottom: 10px;
+}
+.graph-1{
+    left:0px;
+    background-image:url(yoshi.jpg);
+    background-size: contain;
+    background-repeat: no-repeat;
+    width: 100%;
+}
+.content-1{
+    height: 100%;
+    width: 60%;
+}

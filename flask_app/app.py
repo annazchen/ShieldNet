@@ -1,8 +1,8 @@
 import numpy as np
 import os
-from flask import Flask, request, render_template
+from flask import Flask, redirect, request, render_template
 import pickle
-app = Flask(__name__)
+app = Flask(__name__, static_url_path='/static')
 
 # def create_app(test_config=None):
 #     # create and configure the app
@@ -28,12 +28,17 @@ app = Flask(__name__)
 def test():
     return 1
 
-
-# model = pickle.load(open('models/model.pkl', 'rb'))
+# model = pickle.load(open('skaler.pkl', 'rb'))
 @app.route('/')
 def home():
     return render_template('main.html')
-
+@app.route('/static/process', methods=["GET"])
+def process_first():
+    return redirect('/process')
+@app.route('/process', methods=["GET"])
+def process():
+    return render_template('process.html')
+render_template('./process.html')
 @app.route('/predict', methods=["POST"])
 def predict():
     csv_file = request.form.values()
