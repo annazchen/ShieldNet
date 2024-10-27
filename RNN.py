@@ -75,17 +75,20 @@ class SimpleRNN(nn.Module):
 
 
 # Hyperparameters
-input_size = 1  # Number of features in your dataset
+input_size = 4  # Number of features in your dataset
 hidden_size = 50  # Number of hidden units
 output_size = 1  # Predicting one value
 num_epochs = 100
 learning_rate = 0.001
 
 # Model, loss function, optimizer
-model = SimpleRNN(input_size, hidden_size, output_size)
+model = SimpleRNN(input_size, hidden_size, output_size).to('cuda')
 criterion = nn.MSELoss()
 optimizer = optim.Adam(model.parameters(), lr=learning_rate)
 
+#convert tensors
+X_tensor = torch.FloatTensor(X).to('cuda')
+Y_tensor = torch.FloatTensor(y).to('cuda')
 
 # Training loop
 for epoch in range(num_epochs):
@@ -93,7 +96,7 @@ for epoch in range(num_epochs):
     optimizer.zero_grad()
     
     # Forward pass
-    outputs = model(X_tensor.unsqueeze(2))  # Add input dimension
+    outputs = model(X_tensor)  # Add input dimension
     loss = criterion(outputs, y_tensor)
     
     # Backward pass and optimization
@@ -107,8 +110,8 @@ for epoch in range(num_epochs):
 # Example of visualizing predictions
 model.eval()
 with torch.no_grad():
-    train_predict = model(X_tensor.unsqueeze(2))
-    train_predict = train_predict.detach().numpy()
+    train_predict = model(X_tensor)
+    train_predict = train_predict.detach().cpu().numpy()
 
 # Inverse transform to get original values
 train_predict = scaler.inverse_transform(train_predict)
