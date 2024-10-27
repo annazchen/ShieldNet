@@ -6,7 +6,6 @@
     <script src="{{ url_for('static', filename='script.js') }}"></script>
     <title>Home</title>
 </head>
-<body class="content">
     <nav class="navbar">
         <ul>
             <li><div class="links"><a href="{{ url_for('static', filename='main.html') }}">Home</a><div class="underline"></div></div></li>
@@ -14,48 +13,34 @@
             <li><div class="links"><a href="{{ url_for('static', filename='team.html') }}">Our Team</a><div class="underline"></div></div></li>
         </ul>
     </nav>
-
-    <div class="title">
-        <img src="/static/styles/img/logo.PNG" alt="Shield Net logo" width="60" height="60" id="logo">
-        <img src="/static/styles/img/logo-loading.GIF" alt="Guard Net logo animation" width="60" height="60" id="logo-loading">
-        <h1>Shield Net</h1>
-    </div>
+<body class = "content">
     
-    <div class="description">Input your website log to determine whether the activity is malicious or not!</div>
-    
-    <div class="content_home">
-        <div id="dash-line">
-            <p>-----------------------------------------------------------------------------</p>
-        </div>
-        
+    <div class = "title"><img src="{{ url_for('static', filename='logo.PNG') }}" alt="Shield Net logo" width="60" height="60" id="logo"><img src="{{ url_for('static', filename='logo-loading.GIF') }}" alt="Guard Net logo animation" width="60" height="60" id="logo-loading"><h1>Shield Net</h1></div>
+    <div class = "description"> Input your website log to determine whether the activity is malicious or not!</div>
+    <div class = "content_home">
         <form id="csv_form" action="{{ url_for('predict') }}" method="post" enctype="multipart/form-data">
-            <div class="csv_filler">
-                <div class="button" id="input_button">
-                    + Input File
-                    <input id="csv_input" name="csv_file" type="file" accept=".csv" style="opacity: 0.0; position: absolute; top: 0; left: 0; bottom: 0; right: 0; width: 100%; height:100%;" />
-                </div>
-                <p id="check_csv_input">No files selected</p>
+            <div id="drop_zone" ondrop="dropHandler(event)"; ondragover="dragOverHandler(event);">
+                <p>Drag one or more files to this <i>drop zone</i>.</p>
+                <input id="csv_input" type="file" accept=".csv" style="opacity: 0.0; position: absolute; top: 0; left: 0; bottom: 0; right: 0; width: 100%; height:100%;" />
             </div>
-            
-            <div class="button" id="submit_button">
-                Attack type&#129034;
-                <input type="submit" value="Submit" style="opacity: 0.0; position: absolute; top: 0; left: 0; bottom: 0; right: 0; width: 100%; height:100%;">
+            <div class = "csv_captions">
+                <div class = "csv_filler">
+                    <div class = "button" id="input_button">
+                        + Input File
+                        <input id="csv_input_2" type="file" accept=".csv" style="opacity: 0.0; position: absolute; top: 0; left: 0; bottom: 0; right: 0; width: 100%; height:100%;" />
+                    </div>
+                    <p id="check_csv_input">No files selected</p>
+                </div>
+                <div class="button" id="submit_button">Attack type&#129034;
+                    <input type="submit" value="Submit" style="opacity: 0.0; position: absolute; top: 0; left: 0; bottom: 0; right: 0; width: 100%; height:100%;">
+                </div>
             </div>
         </form>
-        
-        <div class="right results">
-            <div id="response-box">
-                <div class="white-bg">
-                    <p>The network activity is:</p>
-                    <p id="response-text">{{ prediction_text }}</p>
-                    
-                    {% if img_url %}
-                        <div class="prediction-image">
+        <div class ="right results">
+            <div id = "response-box"><div class="white-bg"><p>The network activity is:</p><p id="response-text">{{ prediction_text }}</p>
+            <div class="prediction-image">
                             <h2>Hourly Malicious Activity Detection</h2>
                             <img src="{{ img_url }}" alt="Hourly Malicious Activity" style="max-width: 100%; height: auto;">
-                        </div>
-                    {% endif %}
-                </div>
             </div>
         </div>
     </div>
