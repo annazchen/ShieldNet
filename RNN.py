@@ -9,6 +9,10 @@ import time
 
 start_time = time.time()
 
+# Device Set
+device = 'cuda' if torch.cuda.is_available() else 'cpu'
+
+
 # Load dataset
 data = pd.read_csv('Monday.csv')  # replace with your dataset path
 print("Original number of rows:", len(data))
@@ -44,8 +48,8 @@ seq_length = 10
 X, y = create_sequences(data_scaled, seq_length)
 
 # Convert to tensors
-X_tensor = torch.FloatTensor(X)
-y_tensor = torch.FloatTensor(y)
+X_tensor = torch.FloatTensor(X).to(device)
+y_tensor = torch.FloatTensor(y).to(device)
 
 print(f"X_tensor shape: {X_tensor.shape}")
 print(f"y_tensor shape: {y_tensor.shape}")
@@ -66,11 +70,11 @@ class SimpleRNN(nn.Module):
 input_size = 4
 hidden_size = 50
 output_size = 4
-num_epochs = 100
+num_epochs = 100000
 learning_rate = 0.001
 
 # Model, loss function, optimizer
-model = SimpleRNN(input_size, hidden_size, output_size).to('cpu')
+model = SimpleRNN(input_size, hidden_size, output_size).to(device)
 criterion = nn.MSELoss()
 optimizer = optim.Adam(model.parameters(), lr=learning_rate)
 
