@@ -8,6 +8,32 @@ from sklearn.metrics import accuracy_score
 import matplotlib.pyplot as plt
 import time
 
+# new features: number: 19:
+
+# Specify columns to keep
+columns_to_keep = [
+    ' Destination Port', 
+    ' Flow Duration', 
+    ' Total Fwd Packets', 
+    ' Total Backward Packets', 
+    'Total Length of Fwd Packets', 
+    ' Total Length of Bwd Packets', 
+    ' Flow IAT Mean', 
+    ' Fwd Packet Length Mean', 
+    ' Bwd Packet Length Mean', 
+    'Fwd PSH Flags', 
+    ' Bwd PSH Flags', 
+    'FIN Flag Count', 
+    ' SYN Flag Count', 
+    ' ACK Flag Count', 
+    ' Down/Up Ratio', 
+    'Active Mean', 
+    'Idle Mean', 
+    'Fwd Avg Bytes/Bulk', 
+    ' Bwd Avg Bytes/Bulk',
+    ' Label'
+]
+
 start_time = time.time()
 
 # Load dataset
