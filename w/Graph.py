@@ -120,32 +120,53 @@ model.eval()
 torch.save(model.state_dict(), 'rnn_model.pth')'''
 
 # In the analyze_input_file function, load the model and set it to evaluation mode
-def analyze_input_file(file_path):
+import matplotlib.pyplot as plt
+import numpy as np
+import pandas as pd
+import pickle
+import torch
+from sklearn.preprocessing import MinMaxScaler
+from sklearn.metrics import accuracy_score
 
+def analyze_input_file(file_path):
+    # Load the model
     with open('rnn_model.pkl', 'rb') as f:
         model = pickle.load(f)
     model.eval() 
 
-    '''
-    # Load the trained model weights
-    model.load_state_dict(torch.load('rnn_model.pth'))
-    model.eval()  # Ensure the model is in evaluation mode'''
-    
     # Load and process data
     data = pd.read_csv(file_path)
     columns_to_keep = [
-    ' Destination Port', ' Flow Duration', ' Total Fwd Packets', ' Total Backward Packets', 'Total Length of Fwd Packets', ' Total Length of Bwd Packets', ' Fwd Packet Length Max', ' Fwd Packet Length Min', ' Fwd Packet Length Mean', ' Fwd Packet Length Std', 'Bwd Packet Length Max', ' Bwd Packet Length Min', ' Bwd Packet Length Mean', ' Bwd Packet Length Std', ' Flow IAT Mean', ' Flow IAT Std', ' Flow IAT Max', ' Flow IAT Min', 'Fwd IAT Total', ' Fwd IAT Mean', ' Fwd IAT Std', ' Fwd IAT Max', ' Fwd IAT Min', 'Bwd IAT Total', ' Bwd IAT Mean', ' Bwd IAT Std', ' Bwd IAT Max', ' Bwd IAT Min', 'Fwd PSH Flags', ' Bwd PSH Flags', ' Fwd URG Flags', ' Bwd URG Flags', ' Fwd Header Length', ' Bwd Header Length', 'Fwd Packets/s', ' Bwd Packets/s', ' Min Packet Length', ' Max Packet Length', ' Packet Length Mean', ' Packet Length Std', ' Packet Length Variance', 'FIN Flag Count', ' SYN Flag Count', ' RST Flag Count', ' PSH Flag Count', ' ACK Flag Count', ' URG Flag Count', ' CWE Flag Count', ' ECE Flag Count', ' Down/Up Ratio', ' Average Packet Size', ' Avg Fwd Segment Size', ' Avg Bwd Segment Size', ' Fwd Header Length', 'Fwd Avg Bytes/Bulk', ' Fwd Avg Packets/Bulk', ' Fwd Avg Bulk Rate', ' Bwd Avg Bytes/Bulk', ' Bwd Avg Packets/Bulk', 'Bwd Avg Bulk Rate', 'Subflow Fwd Packets', ' Subflow Fwd Bytes', ' Subflow Bwd Packets', ' Subflow Bwd Bytes', 'Init_Win_bytes_forward', ' Init_Win_bytes_backward', ' act_data_pkt_fwd', ' min_seg_size_forward', 'Active Mean', ' Active Std', ' Active Max', ' Active Min', 'Idle Mean', ' Idle Std', ' Idle Max', ' Idle Min'
-
-]
-
+        ' Destination Port', ' Flow Duration', ' Total Fwd Packets', ' Total Backward Packets', 
+        'Total Length of Fwd Packets', ' Total Length of Bwd Packets', ' Fwd Packet Length Max', 
+        ' Fwd Packet Length Min', ' Fwd Packet Length Mean', ' Fwd Packet Length Std', 
+        'Bwd Packet Length Max', ' Bwd Packet Length Min', ' Bwd Packet Length Mean', 
+        ' Bwd Packet Length Std', ' Flow IAT Mean', ' Flow IAT Std', ' Flow IAT Max', 
+        ' Flow IAT Min', 'Fwd IAT Total', ' Fwd IAT Mean', ' Fwd IAT Std', ' Fwd IAT Max', 
+        ' Fwd IAT Min', 'Bwd IAT Total', ' Bwd IAT Mean', ' Bwd IAT Std', ' Bwd IAT Max', 
+        ' Bwd IAT Min', 'Fwd PSH Flags', ' Bwd PSH Flags', ' Fwd URG Flags', ' Bwd URG Flags', 
+        ' Fwd Header Length', ' Bwd Header Length', 'Fwd Packets/s', ' Bwd Packets/s', 
+        ' Min Packet Length', ' Max Packet Length', ' Packet Length Mean', ' Packet Length Std', 
+        ' Packet Length Variance', 'FIN Flag Count', ' SYN Flag Count', ' RST Flag Count', 
+        ' PSH Flag Count', ' ACK Flag Count', ' URG Flag Count', ' CWE Flag Count', 
+        ' ECE Flag Count', ' Down/Up Ratio', ' Average Packet Size', ' Avg Fwd Segment Size', 
+        ' Avg Bwd Segment Size', ' Fwd Header Length', 'Fwd Avg Bytes/Bulk', ' Fwd Avg Packets/Bulk', 
+        ' Fwd Avg Bulk Rate', ' Bwd Avg Bytes/Bulk', ' Bwd Avg Packets/Bulk', 'Bwd Avg Bulk Rate', 
+        'Subflow Fwd Packets', ' Subflow Fwd Bytes', ' Subflow Bwd Packets', ' Subflow Bwd Bytes', 
+        'Init_Win_bytes_forward', ' Init_Win_bytes_backward', ' act_data_pkt_fwd', 
+        ' min_seg_size_forward', 'Active Mean', ' Active Std', ' Active Max', ' Active Min', 
+        'Idle Mean', ' Idle Std', ' Idle Max', ' Idle Min'
+    ]
 
     filtered_data = data[columns_to_keep]
     scaler = MinMaxScaler(feature_range=(0, 1))
     data_scaled = scaler.fit_transform(filtered_data)
     
-    true_labels = (data[' Label'].apply(lambda x: 0 if x == 'BENIGN' else 1)).values[:len(data) - seq_length]
-    
-    # Create sequences
+    # Convert 'Label' to binary values for evaluation
+    true_labels = (data[' Label'].apply(lambda x: 0 if x == 'BENIGN' else 1)).values
+
+    # Sequence preparation
+    seq_length = 10
     def create_sequences(data, seq_length):
         xs = []
         for i in range(len(data) - seq_length):
@@ -153,20 +174,46 @@ def analyze_input_file(file_path):
             xs.append(x)
         return np.array(xs)
     
-    seqlength = 10  # Match sequence length
-    X = create_sequences(data_scaled, seqlength)
+    X = create_sequences(data_scaled, seq_length)
     X_tensor = torch.FloatTensor(X)
 
-    # Predict with model
+    # Model prediction
     with torch.no_grad():
         predictions = model(X_tensor)
         predictions_np = predictions.detach().cpu().numpy()
     
     binary_predictions = (predictions_np[:, 0] > 0.5).astype(int)
-    accuracy = accuracy_score(true_labels, binary_predictions)
-    
+    accuracy = accuracy_score(true_labels[:len(binary_predictions)], binary_predictions)
     print(f"Prediction Accuracy: {accuracy * 100:.2f}%")
-    return binary_predictions
+
+    # Simulate hourly data aggregation
+    interval = 0.5  # assuming logs recorded every 0.5 seconds
+    logs_per_hour = int(3600 / interval)
+    data['Hour'] = (data.index // logs_per_hour) % 24
+
+    # Process and count attacks by hour
+    data[' Label'] = data[' Label'].apply(lambda x: 0 if x == 'BENIGN' else 1)
+    hourly_attacks = data[data[' Label'] == 1].groupby('Hour').size()
+    hourly_attacks = hourly_attacks.reindex(range(24), fill_value=0)
+
+    # Plotting
+    plt.figure(figsize=(10, 6))
+    plt.bar(hourly_attacks.index, hourly_attacks.values, color='red', alpha=0.7, label='Malicious Activity')
+    plt.xlabel('Hour of the Day')
+    plt.ylabel('Number of Malicious Logs')
+    plt.title('Hourly Malicious Activity Detection')
+    plt.xticks(ticks=range(24))
+    plt.legend()
+    plt.grid(axis='y', linestyle='--', alpha=0.7)
+    plt.tight_layout()
+    
+    # Save plot as PNG
+    output_path = 'hourly_attacks.png'
+    plt.savefig(output_path)
+    plt.close()
+
+    return output_path
+
 
 
 # Example usage
@@ -177,43 +224,6 @@ result = analyze_input_file(file_path1)
 import numpy as np
 import pandas as pd
 import matplotlib.pyplot as plt
-
-# Load the dataset
-file_path = 'Thursday.csv'
-data = pd.read_csv(file_path)
-
-# Assume the logs were recorded at 0.5-second intervals
-interval = 0.5  # in seconds
-logs_per_hour = int(3600 / interval)  # Number of logs in an hour (3600 seconds in an hour)
-
-# Add a simulated hour column based on the log index
-data['Hour'] = (data.index // logs_per_hour) % 24  # modulo 24 to cycle through hours in a day
-
-# Convert 'Label' to binary (0 = BENIGN, 1 = ATTACK)
-data[' Label'] = data[' Label'].apply(lambda x: 0 if x == 'BENIGN' else 1)
-
-# Group by hour and count the number of attacks per hour
-hourly_attacks = data[data[' Label'] == 1].groupby('Hour').size()
-
-# Fill missing hours with 0 if no attacks were detected during those hours
-all_hours = range(24)
-hourly_attacks = hourly_attacks.reindex(all_hours, fill_value=0)
-
-# Plotting
-plt.figure(figsize=(10, 6))
-plt.bar(hourly_attacks.index, hourly_attacks.values, color='red', alpha=0.7, label='Malicious Activity')
-
-# Additional plotting aesthetics
-plt.xlabel('Hour of the Day')
-plt.ylabel('Number of Malicious Logs')
-plt.title('Hourly Malicious Activity Detection')
-plt.xticks(ticks=all_hours)
-plt.legend()
-plt.grid(axis='y', linestyle='--', alpha=0.7)
-
-# Show the plot
-plt.tight_layout()
-plt.show()
 
 
 
