@@ -90,8 +90,8 @@ class SimpleRNNBinary(nn.Module):
 
 # Hyperparameters
 input_size = X.shape[2]  # Number of features
-hidden_size = 20
-num_epochs = 200
+hidden_size = 200
+num_epochs = 100
 learning_rate = 0.001
 
 # Model, loss function, and optimizer
@@ -210,7 +210,7 @@ def analyze_input_file(file_path):
 
 
 # Example usage
-file_path = 'Wednesday.csv'
+file_path = 'Thursday.csv'
 result = analyze_input_file(file_path)
 
 
