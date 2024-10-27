@@ -2,6 +2,7 @@ import numpy as np
 import os
 from flask import Flask, redirect, request, render_template
 import pickle
+from ..w.Graph import analyze_input_file
 app = Flask(__name__, static_url_path='/static')
 
 # def create_app(test_config=None):
@@ -26,24 +27,21 @@ app = Flask(__name__, static_url_path='/static')
 #         pass
 
 def test():
-    return 1
+    return "Please work"
 
 # model = pickle.load(open('skaler.pkl', 'rb'))
 @app.route('/')
 def home():
     return render_template('main.html')
-@app.route('/static/process', methods=["GET"])
-def process_first():
-    return redirect('/process')
-@app.route('/process', methods=["GET"])
-def process():
-    return render_template('process.html')
-render_template('./process.html')
+predictions = []
 @app.route('/predict', methods=["POST"])
 def predict():
-    csv_file = request.form.values()
-    # prediction = model.predict(csv_file)
-    prediction = test()
-    return render_template('main.html', prediction_text = prediction)
+    csv_file = request.files['csv_file']
+    prediction = analyze_input_file(csv_file)
+    predictions.append(prediction)
+    return prediction
+@app.route('/display', methods=["GET"])
+def hello():
+    return render_template('main.html', prediction_text=predictions[-1])
 app.run()
     # return app
