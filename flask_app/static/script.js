@@ -8,7 +8,7 @@ $(document).ready(function(){
             document.getElementById("check_csv_input").innerHTML= filename + " selected";
             file = document.getElementById("csv_input").files[0]
         }
-        console.log("ther", file)
+        console.log(file)
     });
     $("#csv_input_2").change(function(){
         if(document.getElementById("csv_input_2").files.length == 0 ){
@@ -18,7 +18,7 @@ $(document).ready(function(){
             document.getElementById("check_csv_input").innerHTML= filename + " selected";
             file = document.getElementById("csv_input_2").files[0]
         }
-        console.log("or here", file)
+        console.log(file)
     });
     
 });
@@ -37,47 +37,43 @@ function dropHandler(ev) {
         file = temp_file
       }
     }
-    console.log("PELASEFDS", file)
+    console.log(file)
 }
-// function dragOverHandler(ev) {
-// console.log("File(s) in drop zone");
+function dragOverHandler(ev) {
+console.log("File(s) in drop zone");
 
-// // Prevent  behavior (Prevent file from being opened)
-// ev.preventDedefaultfault();
-// }
+// Prevent default behavior (Prevent file from being opened)
+ev.preventDefault();
+}
 function loading(){
-    $("#logo-loading").show();
-    $("#logo").hide();
-    console.log("HERER", file)
+$("#logo-loading").show();
+$("#logo").hide();
+console.log(file)
 }
-
+// var data= []
 $(document).on("click", ":submit", function (e) {
-    e.preventDefault()
     if (document.getElementById("csv_input").files.length == 0){
         if (document.getElementById("csv_input_2").files.length == 0 ){
+            e.preventDefault();
             document.getElementById("check_csv_input").innerHTML= "Please upload a file!";
         } 
     }else{
         loading();
-        const formData = new FormData();
-        formData.append('csv_file', file);
-        fetch('/predict', {
+        fetch('/upload', {
             method: 'POST',
             body: formData
         })
-        .then(response => response.text())
+        .then(response => response.json())
         .then(data => {
             console.log('Success:', data);
-            window.location.href = "http://localhost:5000/display"
             alert('File uploaded successfully!');
         })
         .catch((error) => {
-            console.log('Error:', error);
             console.error('Error:', error);
             alert('Error uploading file.');
         });
     }
-    console.log("goT you fam", file)
+    console.log(file)
 });
 
 // async function fetchCSV(url) {
